@@ -10,6 +10,7 @@ var app = builder.Build();
 
 app.UseMiddleware<RequestTimingMiddleware>();
 app.MapPlayerEndpoints();
+app.MapShopEndpoints();
 
 app.MapGet("/", () => "Hello World!");
 

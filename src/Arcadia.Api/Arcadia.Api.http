@@ -39,3 +39,62 @@ Content-Type: application/json
 {
   "username": "Taken"
 }
+
+### Get Inventory user unknown - Expect 404
+GET {{baseUrl}}/players/999/inventory
+
+### Get Inventory for user - Expect 200
+GET {{baseUrl}}/players/123/inventory
+
+### Get Currencies user unknown - Expect 404
+GET {{baseUrl}}/players/999/currencies
+
+### Get Currencies for user - Expect 200
+GET {{baseUrl}}/players/123/currencies
+
+### Buy Item — expect 201 + Location header
+POST {{baseUrl}}/players/123/purchases
+Content-Type: application/json
+
+{
+  "itemId": 123
+}
+
+### Buy Item — expect 201 + Location header
+POST {{baseUrl}}/players/123/purchases
+Content-Type: application/json
+
+{
+  "itemId": 123
+}
+
+### Buy Item as an Unknown user - Expect 404
+POST {{baseUrl}}/players/999/purchases
+Content-Type: application/json
+
+{
+  "itemId": 123
+}
+
+### Buy Unknown Item  - Expect 404
+POST {{baseUrl}}/players/123/purchases
+Content-Type: application/json
+
+{
+  "itemId": 999
+}
+
+### Get Purchase History - Expect 200
+GET {{baseUrl}}/players/123/purchases
+
+### Get Purchase History As Unknown user - Expect 404
+GET {{baseUrl}}/players/999/purchases
+
+### Get Shop Catalogue - Expect 200
+GET {{baseUrl}}/shop/catalog
+
+### Get Global Leaderboards - Expect 200
+GET {{baseUrl}}/leaderboards/global
+
+### Get AroundMe Leaderboards - Expect 200
+GET {{baseUrl}}/leaderboards/global/around-me
