@@ -11,6 +11,7 @@ var app = builder.Build();
 app.UseMiddleware<RequestTimingMiddleware>();
 app.MapPlayerEndpoints();
 app.MapShopEndpoints();
+app.MapLeaderboardEndpoints();
 
 app.MapGet("/", () => "Hello World!");
 
