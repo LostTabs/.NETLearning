@@ -1,0 +1,41 @@
+@baseUrl = http://localhost:5293
+
+### Root
+GET {{baseUrl}}/
+
+### Slow endpoint (timing experiment)
+GET {{baseUrl}}/slow
+
+### Register — expect 201 + Location header
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "username": "Alice",
+  "password": "aSafePassword"
+}
+
+### Read profile — expect 200
+GET {{baseUrl}}/players/123456/profile
+
+### Read profile, unknown player — expect 404
+GET {{baseUrl}}/players/999/profile
+
+### Read profile, invalid ID — expect 404 (route constraint)
+GET {{baseUrl}}/players/abc/profile
+
+### Update profile — expect 200
+PATCH {{baseUrl}}/players/123456/profile
+Content-Type: application/json
+
+{
+  "username": "Fred"
+}
+
+### Update profile, username taken — expect 409
+PATCH {{baseUrl}}/players/123456/profile
+Content-Type: application/json
+
+{
+  "username": "Taken"
+}
