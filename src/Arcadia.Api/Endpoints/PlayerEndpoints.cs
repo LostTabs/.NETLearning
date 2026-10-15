@@ -103,7 +103,7 @@ public static class PlayerEndpoints
 
         var response = new PurchaseResponse(123456, 123, 10, 1);
         
-        return TypedResults.Created($"/players/{playerId}/purchase/{response.PurchaseId}", response);
+        return TypedResults.Created($"/players/{playerId}/purchases/{response.PurchaseId}", response);
     }
 
     private static Results<Ok<PurchaseHistoryResponse>, NotFound> GetPurchaseHistory(long playerId)
