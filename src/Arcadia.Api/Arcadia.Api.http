@@ -3,9 +3,6 @@
 ### Root
 GET {{baseUrl}}/
 
-### Slow endpoint (timing experiment)
-GET {{baseUrl}}/slow
-
 ### Register — expect 201 + Location header
 POST {{baseUrl}}/players
 Content-Type: application/json
@@ -60,14 +57,6 @@ Content-Type: application/json
   "itemId": 123
 }
 
-### Buy Item — expect 201 + Location header
-POST {{baseUrl}}/players/123/purchases
-Content-Type: application/json
-
-{
-  "itemId": 123
-}
-
 ### Buy Item as an Unknown user - Expect 404
 POST {{baseUrl}}/players/999/purchases
 Content-Type: application/json
@@ -96,5 +85,11 @@ GET {{baseUrl}}/shop/catalog
 ### Get Global Leaderboards - Expect 200
 GET {{baseUrl}}/leaderboards/global
 
+### Get Global Leaderboards with defined Limit - Expect 200
+GET {{baseUrl}}/leaderboards/global?limit=5
+
 ### Get AroundMe Leaderboards - Expect 200
 GET {{baseUrl}}/leaderboards/global/around-me
+
+### Get AroundMe Leaderboards with defined range- Expect 200
+GET {{baseUrl}}/leaderboards/global/around-me?range=25

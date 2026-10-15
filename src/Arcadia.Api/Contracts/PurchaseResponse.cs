@@ -1,3 +1,3 @@
 namespace Arcadia.Api.Contracts;
 
-public record PurchaseResponse(string ItemId, int Cost);
+public record PurchaseResponse(long PurchaseId, long ItemId, int Cost);

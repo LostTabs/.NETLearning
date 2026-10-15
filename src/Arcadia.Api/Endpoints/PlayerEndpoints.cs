@@ -16,22 +16,22 @@ public static class PlayerEndpoints
         player.MapGet("/currencies", GetCurrencies);
         player.MapGet("/inventory", GetInventory);
 
-        player.MapPost("purchases", BuyItem);
-        player.MapGet("purchases", GetPurchaseHistory);
+        player.MapPost("/purchases", BuyItem);
+        player.MapGet("/purchases", GetPurchaseHistory);
         
         return app;
     }
 
     private static Results<Created<ProfileResponse>, BadRequest<string>> RegisterPlayer(RegisterPlayerRequest request)
     {
-        if (string.IsNullOrWhiteSpace(request.UserName))
+        if (string.IsNullOrWhiteSpace(request.Username))
         {
             return TypedResults.BadRequest("Username is required.");
         }
 
         long playerId = 123456;
-        var response = new ProfileResponse(playerId, request.UserName);
-        return TypedResults.Created($"players/{playerId}/profile", response);
+        var response = new ProfileResponse(playerId, request.Username);
+        return TypedResults.Created($"/players/{playerId}/profile", response);
     }
 
     private static Results<Ok<ProfileResponse>, NotFound> GetProfile(long playerId)
@@ -69,7 +69,7 @@ public static class PlayerEndpoints
         var items = new List<Item>()
         {
             new Item(133, 1),
-            new Item(133, 1),
+            new Item(134, 1),
         };
         return TypedResults.Ok(new InventoryResponse(items));
     }
@@ -83,22 +83,27 @@ public static class PlayerEndpoints
         
         var items = new List<Currency>()
         {
-            new Currency(133, 1),
-            new Currency(133, 1),
+            new Currency(123, 1),
+            new Currency(124, 1),
         };
         return TypedResults.Ok(new CurrenciesResponse(items));
     }
 
-    private static Results<Created<PurchaseResponse>, NotFound> BuyItem(long playerId, PurchaseRequest request)
+    private static Results<Created<PurchaseResponse>, Conflict, NotFound> BuyItem(long playerId, PurchaseRequest request)
     {
         if (playerId == 999 || request.ItemId == 999)
         {
             return TypedResults.NotFound();
         }
 
-        var response = new PurchaseResponse("123", 10);
+        if (request.ItemId == 998)
+        {
+            return TypedResults.Conflict();
+        }
+
+        var response = new PurchaseResponse(123456, 123, 10);
         
-        return TypedResults.Created($"players/{playerId}/profile", response);
+        return TypedResults.Created($"/players/{playerId}/profile", response);
     }
 
     private static Results<Ok<PurchaseHistoryResponse>, NotFound> GetPurchaseHistory(long playerId)
@@ -108,10 +113,10 @@ public static class PlayerEndpoints
             return TypedResults.NotFound();
         }
 
-        var collection = new List<Purchases>
+        var collection = new List<Purchase>
         {
-            new (123, 10, new DateTime(2020, 01, 01)),
-            new (124, 12, new DateTime(2020, 01, 03)),
+            new (123, 10, new DateTime(2020, 01, 01, 0, 0, 0, DateTimeKind.Utc)),
+            new (124, 12, new DateTime(2020, 01, 03, 0, 0, 0, DateTimeKind.Utc)),
         };
         return TypedResults.Ok(new PurchaseHistoryResponse(collection));
         

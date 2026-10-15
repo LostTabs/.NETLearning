@@ -8,15 +8,15 @@ public static class LeaderboardsEndpoints
     public static IEndpointRouteBuilder MapLeaderboardEndpoints(this IEndpointRouteBuilder app)
     {
         var leaderboards = app.MapGroup("/leaderboards");
-        leaderboards.MapGet("/global?limit=value", GetGlobalLeaderboards);
-        leaderboards.MapGet("/global/around-me?limit=value", GetAroundMeLeaderboards);
+        leaderboards.MapGet("/global", GetGlobalLeaderboards);
+        leaderboards.MapGet("/global/around-me", GetAroundMeLeaderboards);
 
         return app;
     }
 
-    private static Results<Ok<LeaderboardsResponse>, NotFound> GetGlobalLeaderboards(int? range)
+    private static Ok<LeaderboardsResponse> GetGlobalLeaderboards(int? limit)
     {
-        var verifiedRange = range ?? 50;
+        var verifiedLimit = limit ?? 50;
         
         var results = new List<PlayerEntry>
         {
@@ -24,15 +24,15 @@ public static class LeaderboardsEndpoints
             new(123457, 2, 90),
         };
         
-        if (results.Count > verifiedRange)
+        if (results.Count > verifiedLimit)
         {
-            results.RemoveRange(verifiedRange, results.Count - verifiedRange);
+            results.RemoveRange(verifiedLimit, results.Count - verifiedLimit);
         }
         
         return TypedResults.Ok(new LeaderboardsResponse(results));
     }
 
-    private static Results<Ok<LeaderboardsResponse>, NotFound> GetAroundMeLeaderboards(int? range)
+    private static Ok<LeaderboardsResponse> GetAroundMeLeaderboards(int? range)
     {
         var verifiedRange = range ?? 50;
         

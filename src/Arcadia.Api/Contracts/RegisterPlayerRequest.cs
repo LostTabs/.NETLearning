@@ -1,3 +1,3 @@
 namespace Arcadia.Api.Contracts;
 
-public record RegisterPlayerRequest(string UserName, string Password);
+public record RegisterPlayerRequest(string Username, string Password);

@@ -1,6 +1,6 @@
 namespace Arcadia.Api.Contracts;
 
-public record Currency(long currency, int quantity);
+public record Currency(long CurrencyId, int Amount);
 
-public record CurrenciesResponse(List<Currency> currencies);
+public record CurrenciesResponse(List<Currency> Currencies);
 

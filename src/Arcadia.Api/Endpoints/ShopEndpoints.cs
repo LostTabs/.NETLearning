@@ -13,9 +13,8 @@ public static class ShopEndpoints
         return app;
     }
 
-    private static Results<Ok<CatalogueResponse>, BadRequest> GetShopCatalog()
+    private static Ok<CatalogueResponse> GetShopCatalog()
     {
-
         var catalog = new List<CatalogueProduct>
         {
             new(123, "xpot", 12),
