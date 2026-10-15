@@ -101,9 +101,9 @@ public static class PlayerEndpoints
             return TypedResults.Conflict();
         }
 
-        var response = new PurchaseResponse(123456, 123, 10);
+        var response = new PurchaseResponse(123456, 123, 10, 1);
         
-        return TypedResults.Created($"/players/{playerId}/profile", response);
+        return TypedResults.Created($"/players/{playerId}/purchase/{response.PurchaseId}", response);
     }
 
     private static Results<Ok<PurchaseHistoryResponse>, NotFound> GetPurchaseHistory(long playerId)
@@ -115,8 +115,8 @@ public static class PlayerEndpoints
 
         var collection = new List<Purchase>
         {
-            new (123, 10, new DateTime(2020, 01, 01, 0, 0, 0, DateTimeKind.Utc)),
-            new (124, 12, new DateTime(2020, 01, 03, 0, 0, 0, DateTimeKind.Utc)),
+            new (123, 1, 10, new DateTime(2020, 01, 01, 0, 0, 0, DateTimeKind.Utc)),
+            new (124, 2, 12, new DateTime(2020, 01, 03, 0, 0, 0, DateTimeKind.Utc)),
         };
         return TypedResults.Ok(new PurchaseHistoryResponse(collection));
         

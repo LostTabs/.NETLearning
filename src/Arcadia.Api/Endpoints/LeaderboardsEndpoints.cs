@@ -32,8 +32,13 @@ public static class LeaderboardsEndpoints
         return TypedResults.Ok(new LeaderboardsResponse(results));
     }
 
-    private static Ok<LeaderboardsResponse> GetAroundMeLeaderboards(int? range)
+    private static Results<Ok<LeaderboardsResponse>, BadRequest> GetAroundMeLeaderboards(int? range)
     {
+        if (range < 0)
+        {
+            return TypedResults.BadRequest();
+        }
+        
         var verifiedRange = range ?? 50;
         
         var results = new List<PlayerEntry>

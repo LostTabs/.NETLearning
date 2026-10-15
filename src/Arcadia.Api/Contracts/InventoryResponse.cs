@@ -1,5 +1,5 @@
 namespace Arcadia.Api.Contracts;
 
-public record Item(long id, int quantity);
+public record Item(long Id, int Quantity);
 
-public record InventoryResponse(List<Item> items);
+public record InventoryResponse(List<Item> Items);
