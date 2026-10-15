@@ -1,5 +1,7 @@
 using Arcadia.Api.Contracts;
+using Arcadia.Api.Options;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.Options;
 
 namespace Arcadia.Api.Endpoints;
 
@@ -14,9 +16,14 @@ public static class LeaderboardsEndpoints
         return app;
     }
 
-    private static Ok<LeaderboardsResponse> GetGlobalLeaderboards(int? limit)
+    private static Results<Ok<LeaderboardsResponse>, BadRequest<string>> GetGlobalLeaderboards(int? limit, IOptions<LeaderboardOptions> options)
     {
-        var verifiedLimit = limit ?? 50;
+        var verifiedLimit = limit ?? options.Value.DefaultLimit;
+        
+        if (limit > options.Value.MaxLimit)
+        {
+            return TypedResults.BadRequest("Limit exceeded");
+        }
         
         var results = new List<PlayerEntry>
         {
@@ -32,14 +39,14 @@ public static class LeaderboardsEndpoints
         return TypedResults.Ok(new LeaderboardsResponse(results));
     }
 
-    private static Results<Ok<LeaderboardsResponse>, BadRequest> GetAroundMeLeaderboards(int? range)
+    private static Results<Ok<LeaderboardsResponse>, BadRequest<string>> GetAroundMeLeaderboards(int? range, IOptions<LeaderboardOptions> options)
     {
-        if (range < 0)
+        if (range > options.Value.MaxRange)
         {
-            return TypedResults.BadRequest();
+            return TypedResults.BadRequest("range exceeded");
         }
         
-        var verifiedRange = range ?? 50;
+        var verifiedRange = range ?? options.Value.DefaultRange;
         
         var results = new List<PlayerEntry>
         {
