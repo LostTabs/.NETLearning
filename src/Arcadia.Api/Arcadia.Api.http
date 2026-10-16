@@ -88,8 +88,14 @@ GET {{baseUrl}}/leaderboards/global
 ### Get Global Leaderboards with defined Limit - Expect 200
 GET {{baseUrl}}/leaderboards/global?limit=5
 
+### Get Global Leaderboards with exceding Limit - Expect 400
+GET {{baseUrl}}/leaderboards/global?limit=1001
+
 ### Get AroundMe Leaderboards - Expect 200
 GET {{baseUrl}}/leaderboards/global/around-me
 
 ### Get AroundMe Leaderboards with defined range- Expect 200
 GET {{baseUrl}}/leaderboards/global/around-me?range=25
+
+### Get AroundMe Leaderboards with exceding range- Expect 400
+GET {{baseUrl}}/leaderboards/global/around-me?range=51
