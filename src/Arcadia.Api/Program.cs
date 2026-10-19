@@ -2,6 +2,7 @@ using Arcadia.Api.Diagnostics;
 using Arcadia.Api.Middleware;
 using Arcadia.Api.Endpoints;
 using Arcadia.Api.Infrastructure;
+using Arcadia.Api.Leaderboards;
 using Arcadia.Api.Options;
 using Arcadia.Api.Players;
 
@@ -25,6 +26,7 @@ builder.Services.AddSingleton<SingletonProbe>();
  */
 builder.Services.AddSingleton<IPlayerRepository, InMemoryPlayerRepository>();
 builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddSingleton<LeaderboardCache>();
 
 var app = builder.Build();
 app.UseMiddleware<CorrelationIdMiddleware>();
@@ -73,6 +75,8 @@ app.MapPost("/players", async (
     //       Hint: Results.Created(uri, value)
         Results.Created($"/players/{player.Id}", player);
 });
+
+//app.MapGet("/leaderboard/whoami", (LeaderboardCache cache) => cache.WhoAmI());
 
 app.Run();
 
