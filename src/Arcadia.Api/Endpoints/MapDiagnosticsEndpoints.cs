@@ -6,7 +6,7 @@ namespace Arcadia.Api.Endpoints;
 
 public static class DiagnosticsEndpoints
 {
-    public static IEndpointRouteBuilder MapDiagnosticsEndPoints(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapDiagnosticsEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("/di/lifetimes", LifeTimes);
         app.MapGet("/debug/correlation", Correlation);

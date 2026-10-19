@@ -13,7 +13,7 @@ public class CorrelationIdMiddleware
     public async Task InvokeAsync(HttpContext context, RequestContext requestContext)
     {
         var correlationId = context.Request.Headers[Header].ToString();
-        if (string.IsNullOrEmpty(correlationId))
+        if (string.IsNullOrWhiteSpace(correlationId))
         {
             correlationId = Guid.NewGuid().ToString();
         }

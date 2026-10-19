@@ -19,8 +19,8 @@ public static class PlayerEndpoints
         player.MapPost("/purchases", BuyItem);
         player.MapGet("/purchases", GetPurchaseHistory);
         
-        app.MapGet("/players/{id:guid}", GetPlayer);
-        app.MapPost("/players", RegisterPlayer);
+        players.MapGet("/{id:guid}", GetPlayer);
+        players.MapPost("/", RegisterPlayer);
         
         return app;
     }
@@ -122,7 +122,7 @@ public static class PlayerEndpoints
     private static async Task<Results<Created<Player>, BadRequest<string>, Conflict<string>>>  RegisterPlayer(CreatePlayerRequest request, IPlayerRepository repo, TimeProvider time,
         CancellationToken ct)
     {
-        if (string.IsNullOrEmpty(request.Username)) return TypedResults.BadRequest("Username is required");
+        if (string.IsNullOrWhiteSpace(request.Username)) return TypedResults.BadRequest("Username is required");
         var player = new Player(Guid.NewGuid(), request.Username, time.GetUtcNow());
         var result = await repo.TryAddAsync(player, ct);
         return !result ? TypedResults.Conflict("Username is already taken") :

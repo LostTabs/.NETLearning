@@ -37,7 +37,11 @@ app.UseMiddleware<RequestTimingMiddleware>();
 app.MapPlayerEndpoints();
 app.MapShopEndpoints();
 app.MapLeaderboardEndpoints();
-app.MapDiagnosticsEndPoints();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapDiagnosticsEndpoints();
+}
 
 app.MapGet("/", () => "Hello World!");
 
