@@ -8,7 +8,7 @@ public static class PlayerEndpoints
     public static IEndpointRouteBuilder MapPlayerEndpoints(this IEndpointRouteBuilder app)
     {
         var players = app.MapGroup("/players");
-        players.MapPost("/", RegisterPlayer);
+        //players.MapPost("/", RegisterPlayer);
         
         var player = players.MapGroup("/{playerId:long}");
         player.MapGet("/profile", GetProfile);

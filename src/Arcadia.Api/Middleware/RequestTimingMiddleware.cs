@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using Arcadia.Api.Infrastructure;
 
 namespace Arcadia.Api.Middleware;
 
@@ -14,7 +15,7 @@ public class RequestTimingMiddleware
         _logger = logger;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, RequestContext requestContext)
     {
         var start = Stopwatch.GetTimestamp();
         
@@ -32,11 +33,12 @@ public class RequestTimingMiddleware
         {
             var elapsedTime = Stopwatch.GetElapsedTime(start);
          
-            _logger.LogInformation("{Method} {Path} responded {StatusCode} in {ElapsedMs} ms",
+            _logger.LogInformation("{Method} {Path} responded {StatusCode} in {ElapsedMs} ms for {CorrelationId}",
                 context.Request.Method,
                 context.Request.Path,
                 context.Response.StatusCode,
-                elapsedTime.TotalMilliseconds);    
+                elapsedTime.TotalMilliseconds,
+                requestContext.CorrelationId);    
         }
     }
 }
