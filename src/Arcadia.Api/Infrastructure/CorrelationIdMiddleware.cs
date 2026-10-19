@@ -6,14 +6,9 @@ public class CorrelationIdMiddleware
 {
     private const string Header = "X-Correlation-Id";
     private readonly RequestDelegate _next;
-    private readonly RequestContext _requestContext;
-    
-    public CorrelationIdMiddleware(RequestDelegate next, RequestContext requestContext)
-    {
-        _next = next;
-        _requestContext = requestContext;   // BUG (deliberate)
-    }
-    
+
+    public CorrelationIdMiddleware(RequestDelegate next) => _next = next;
+
     // Scoped services go HERE, as InvokeAsync parameters, not in the constructor.
     public async Task InvokeAsync(HttpContext context, RequestContext requestContext)
     {
@@ -22,7 +17,7 @@ public class CorrelationIdMiddleware
         var correlationId = context.Request.Headers[Header].ToString();
         if (string.IsNullOrEmpty(correlationId))
         {
-            correlationId = Guid.NewGuid().ToString();
+            context.Request.Headers[Header] = Guid.NewGuid().ToString();
         }
         
         // TODO 2: store it in requestContext.CorrelationId.
