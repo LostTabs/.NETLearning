@@ -6,9 +6,14 @@ public class CorrelationIdMiddleware
 {
     private const string Header = "X-Correlation-Id";
     private readonly RequestDelegate _next;
-
-    public CorrelationIdMiddleware(RequestDelegate next) => _next = next;
-
+    private readonly RequestContext _requestContext;
+    
+    public CorrelationIdMiddleware(RequestDelegate next, RequestContext requestContext)
+    {
+        _next = next;
+        _requestContext = requestContext;   // BUG (deliberate)
+    }
+    
     // Scoped services go HERE, as InvokeAsync parameters, not in the constructor.
     public async Task InvokeAsync(HttpContext context, RequestContext requestContext)
     {
