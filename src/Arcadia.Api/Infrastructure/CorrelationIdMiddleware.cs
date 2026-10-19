@@ -12,20 +12,14 @@ public class CorrelationIdMiddleware
     // Scoped services go HERE, as InvokeAsync parameters, not in the constructor.
     public async Task InvokeAsync(HttpContext context, RequestContext requestContext)
     {
-        // TODO 1: read the header from context.Request.Headers.
-        //         If it's missing or empty, generate a new one (Guid.NewGuid().ToString() is fine).
         var correlationId = context.Request.Headers[Header].ToString();
         if (string.IsNullOrEmpty(correlationId))
         {
-            context.Request.Headers[Header] = Guid.NewGuid().ToString();
+            correlationId = Guid.NewGuid().ToString();
         }
         
-        // TODO 2: store it in requestContext.CorrelationId.
         requestContext.CorrelationId = correlationId;
         
-        // TODO 3: add it to context.Response.Headers.
-        //         Do this BEFORE calling _next. Once the response body starts,
-        //         headers can't be changed.
         context.Response.Headers[Header] = correlationId;   
         
         await _next(context);

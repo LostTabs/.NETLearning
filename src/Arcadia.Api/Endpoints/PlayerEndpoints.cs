@@ -1,4 +1,5 @@
 using Arcadia.Api.Contracts;
+using Arcadia.Api.Players;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Arcadia.Api.Endpoints;
@@ -8,7 +9,6 @@ public static class PlayerEndpoints
     public static IEndpointRouteBuilder MapPlayerEndpoints(this IEndpointRouteBuilder app)
     {
         var players = app.MapGroup("/players");
-        //players.MapPost("/", RegisterPlayer);
         
         var player = players.MapGroup("/{playerId:long}");
         player.MapGet("/profile", GetProfile);
@@ -19,21 +19,12 @@ public static class PlayerEndpoints
         player.MapPost("/purchases", BuyItem);
         player.MapGet("/purchases", GetPurchaseHistory);
         
+        app.MapGet("/players/{id:guid}", GetPlayer);
+        app.MapPost("/players", RegisterPlayer);
+        
         return app;
     }
-
-    private static Results<Created<ProfileResponse>, BadRequest<string>> RegisterPlayer(RegisterPlayerRequest request)
-    {
-        if (string.IsNullOrWhiteSpace(request.Username))
-        {
-            return TypedResults.BadRequest("Username is required.");
-        }
-
-        long playerId = 123456;
-        var response = new ProfileResponse(playerId, request.Username);
-        return TypedResults.Created($"/players/{playerId}/profile", response);
-    }
-
+    
     private static Results<Ok<ProfileResponse>, NotFound> GetProfile(long playerId)
     {
         // Hard-coded stub: pretend player 999 doesn't exist, so you can test the 404
@@ -120,6 +111,22 @@ public static class PlayerEndpoints
         };
         return TypedResults.Ok(new PurchaseHistoryResponse(collection));
         
+    }
+    
+    private static async Task<Results<Ok<Player>, NotFound>>  GetPlayer(Guid id, IPlayerRepository repo, CancellationToken ct)
+    {
+        var player = await repo.GetAsync(id, ct);
+        return player is null ? TypedResults.NotFound() : TypedResults.Ok(player);
+    }
+
+    private static async Task<Results<Created<Player>, BadRequest<string>, Conflict<string>>>  RegisterPlayer(CreatePlayerRequest request, IPlayerRepository repo, TimeProvider time,
+        CancellationToken ct)
+    {
+        if (string.IsNullOrEmpty(request.Username)) return TypedResults.BadRequest("Username is required");
+        var player = new Player(Guid.NewGuid(), request.Username, time.GetUtcNow());
+        var result = await repo.TryAddAsync(player, ct);
+        return !result ? TypedResults.Conflict("Username is already taken") :
+            TypedResults.Created($"/players/{player.Id}", player);
     }
 
 }

@@ -4,12 +4,12 @@ namespace Arcadia.Api.Players;
 
 public class InMemoryPlayerRepository : IPlayerRepository
 {
-    private ConcurrentDictionary<Guid, Player> players = new();
-    private ConcurrentDictionary<string, Guid> userNames = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<Guid, Player> _players = new();
+    private readonly ConcurrentDictionary<string, Guid> _userNames = new(StringComparer.OrdinalIgnoreCase);
     
     public Task<Player?> GetAsync(Guid id, CancellationToken ct)
     {
-        players.TryGetValue(id, out var player);
+        _players.TryGetValue(id, out var player);
         return Task.FromResult(player);
     }
 
@@ -20,17 +20,17 @@ public class InMemoryPlayerRepository : IPlayerRepository
          * By checking if the username is already taken (which is an atomic function), if 2 players
          * are trying to register with the same username, it would be stopped there.
          */
-        if (!userNames.TryAdd(player.Username, player.Id))
+        if (!_userNames.TryAdd(player.Username, player.Id))
         {
             return Task.FromResult(false);
         }
 
-        if (players.TryAdd(player.Id, player))
+        if (_players.TryAdd(player.Id, player))
         {
             return Task.FromResult(true);
         }
         
-        userNames.TryRemove(player.Username, out _);
+        _userNames.TryRemove(player.Username, out _);
         return Task.FromResult(false);
 
     }
