@@ -7,6 +7,11 @@ using Arcadia.Api.Options;
 using Arcadia.Api.Players;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseDefaultServiceProvider(options =>
+{
+    options.ValidateScopes = true;
+    options.ValidateOnBuild = true;
+});
 
 Console.WriteLine($"MaxRange from config: {builder.Configuration["Leaderboards:MaxRange"]}");
 
