@@ -76,7 +76,12 @@ app.MapPost("/players", async (
         Results.Created($"/players/{player.Id}", player);
 });
 
-//app.MapGet("/leaderboard/whoami", (LeaderboardCache cache) => cache.WhoAmI());
+app.MapGet("/leaderboard/whoami", (LeaderboardCache cache, RequestContext rc) => new
+{
+    cacheSees  = cache.WhoAmI(),
+    requestHas = rc.InstanceId,
+    correlationId = rc.CorrelationId
+});
 
 app.Run();
 

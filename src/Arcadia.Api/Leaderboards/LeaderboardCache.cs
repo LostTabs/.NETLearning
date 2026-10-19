@@ -10,5 +10,5 @@ public class LeaderboardCache
     public LeaderboardCache(RequestContext requestContext)
         => _requestContext = requestContext;
 
-    public string WhoAmI() => _requestContext.CorrelationId;
+    public Guid WhoAmI() => _requestContext.InstanceId;
 }
