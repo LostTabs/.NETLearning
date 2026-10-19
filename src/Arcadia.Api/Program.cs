@@ -83,7 +83,7 @@ app.MapPost("/players", async (
 
 app.MapGet("/leaderboard/whoami", (LeaderboardCache cache, RequestContext rc) => new
 {
-    cacheSees  = cache.WhoAmI(),
+    cacheSees  = cache.WhoAmI(rc.CorrelationId),
     requestHas = rc.InstanceId,
     correlationId = rc.CorrelationId
 });
