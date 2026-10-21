@@ -1,7 +1,7 @@
 -- Setup: a valid player to test against (this one should succeed)
 INSERT INTO players (username, email, country) VALUES ('Diogo', 'diogo@mail.com', 'PT');
 -- Setup: items that use COIN as a price
-INSERT INTO items (sku, display_name, price_amount, price_currency_code, stackable) VALUES ('COIN_001', 'itemA', 99, 'COIN', true);
+INSERT INTO items (sku, display_name, price_amount, price_currency_code, stackable) VALUES ('COIN001', 'itemA', 99, 'COIN', true);
 
 -- 1. A balance of -100
 INSERT INTO player_balances (player_id, currency_code, balance) VALUES ((SELECT id FROM players WHERE username = 'Diogo'), 'GEM', -100);
@@ -9,8 +9,8 @@ INSERT INTO player_balances (player_id, currency_code, balance) VALUES ((SELECT 
 -- DETAIL:  Failing row contains (1, GEM, -100, 2026-10-21 10:57:32.047765+00).
 
 -- 2. An inventory row for player ID 99999, which doesn't exist.
-INSERT INTO inventory (player_id, currency_code, balance) VALUES (99999, 'COIN_001', 100);
--- ERROR:  insert or update on table "player_balances" violates foreign key constraint "player_balances_player_fk"
+INSERT INTO inventory (player_id, item_id, quantity) VALUES (99999, 'COIN001', 100);
+-- ERROR:  insert or update on table "inventory" violates foreign key constraint "inventory_player_fk"
 -- DETAIL:  Key (player_id)=(99999) is not present in table "players".
 
 -- 3. Deleting the COIN currency while items are priced in it.
