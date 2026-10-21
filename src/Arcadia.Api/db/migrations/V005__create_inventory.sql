@@ -10,7 +10,7 @@ CREATE TABLE inventory(
     -- If an item is deleted, players would lose items. It makes more sense to migrate/delete all the items from
     -- players inventories before allowing the deletion of an item.
     CONSTRAINT inventory_item_id_fk FOREIGN KEY (item_id) REFERENCES items (id) ON DELETE RESTRICT,
-    -- We can enforce the stackable rule in the database because tables cant look at other tables checks.
+    -- We can't enforce the stackable rule in the database because tables cant look at other tables checks.
     -- This should be enforced at the application logic. There is also the option of using a trigger, but
     -- considering the system being built, I think checking at the application level if the player already has
     -- an item would be better.

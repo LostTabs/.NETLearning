@@ -2,7 +2,7 @@ CREATE TABLE player_balances(
     player_id       bigint NOT NULL,
     currency_code   text NOT NULL, 
     balance         bigint NOT NULL DEFAULT 0,
-    updated_at      timestamptz NOT NULL DEFAULT now(),
+    updated_at      timestamptz NOT NULL DEFAULT now(), --This should be maintained by API code.
     
     CONSTRAINT player_balances_pk PRIMARY KEY (player_id, currency_code),
     -- A balance with no player makes no sense. If we are deleting a player, the balance should follow

@@ -4,12 +4,12 @@ INSERT INTO players (username, email, country) VALUES ('Diogo', 'diogo@mail.com'
 INSERT INTO items (sku, display_name, price_amount, price_currency_code, stackable) VALUES ('COIN_001', 'itemA', 99, 'COIN', true);
 
 -- 1. A balance of -100
-INSERT INTO player_balances (player_id, currency_code, balance) VALUES ((SELECT id FROM players WHERE username = 'diogo'), 'GEM', -100);
+INSERT INTO player_balances (player_id, currency_code, balance) VALUES ((SELECT id FROM players WHERE username = 'Diogo'), 'GEM', -100);
 -- ERROR:  new row for relation "player_balances" violates check constraint "player_balances_balance_ck"
 -- DETAIL:  Failing row contains (1, GEM, -100, 2026-10-21 10:57:32.047765+00).
 
 -- 2. An inventory row for player ID 99999, which doesn't exist.
-INSERT INTO player_balances (player_id, currency_code, balance) VALUES (99999, 'COIN', 100);
+INSERT INTO inventory (player_id, currency_code, balance) VALUES (99999, 'COIN_001', 100);
 -- ERROR:  insert or update on table "player_balances" violates foreign key constraint "player_balances_player_fk"
 -- DETAIL:  Key (player_id)=(99999) is not present in table "players".
 
@@ -19,11 +19,11 @@ DELETE FROM currencies WHERE code = 'COIN';
 -- DETAIL:  Key (code)=(COIN) is referenced from table "items". 
 
 -- 4. Two players with the same email.
-INSERT INTO players (username, email, country) VALUES ('Filipe', 'diogo@mail.com', 'UK');
+INSERT INTO players (username, email, country) VALUES ('Filipe', 'diogo@mail.com', 'GB');
 -- ERROR:  duplicate key value violates unique constraint "players_email_uq"
 -- DETAIL:  Key (email)=(diogo@mail.com) already exists.
 
 -- 5. A player called Diogo, then another called diogo.
-INSERT INTO players (username, email, country) VALUES ('Diogo', 'f@mail.com', 'PT');
+INSERT INTO players (username, email, country) VALUES ('diogo', 'f@mail.com', 'PT');
 -- ERROR:  duplicate key value violates unique constraint "players_username_lower_uq"
 -- DETAIL:  Key (lower(username))=(diogo) already exists.
