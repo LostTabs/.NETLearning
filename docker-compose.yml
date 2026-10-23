@@ -10,7 +10,7 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql
-      - ./db/migrations:/docker-entrypoint-initdb.d:ro
+      - .src/Arcadia.Api/db/migrations:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d arcadia"]
       interval: 5s

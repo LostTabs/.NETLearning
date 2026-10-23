@@ -9,8 +9,8 @@ INSERT INTO player_balances (player_id, currency_code, balance) VALUES ((SELECT 
 -- DETAIL:  Failing row contains (1, GEM, -100, 2026-10-21 10:57:32.047765+00).
 
 -- 2. An inventory row for player ID 99999, which doesn't exist.
-INSERT INTO inventory (player_id, item_id, quantity) VALUES (99999, 'COIN001', 100);
--- ERROR:  insert or update on table "inventory" violates foreign key constraint "inventory_player_fk"
+INSERT INTO inventory (player_id, item_id, quantity) VALUES (99999, (SELECT item_id FROM items WHERE sku = 'COIN001'), 100);
+-- ERROR:  insert or update on table "inventory" violates foreign key constraint "inventory_player_id_fk"
 -- DETAIL:  Key (player_id)=(99999) is not present in table "players".
 
 -- 3. Deleting the COIN currency while items are priced in it.
