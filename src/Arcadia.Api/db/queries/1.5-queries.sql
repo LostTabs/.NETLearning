@@ -131,8 +131,19 @@ WHERE b.balance > (
 ORDER BY p.username;
     
 -- 11. Players who own at least one item priced in a premium currency. Use currencies.is_premium, not a hard-coded 'GEM'.
-
-    
+-- EXPECTED RESULTS: NO_INVENTORY and ONLY_COINS not present and any bots that don't have items that use 
+-- is_premium currency. ONLY_COINS was seeded with no items that cost gems.
+SELECT p.username
+FROM players p
+WHERE EXISTS (
+    SELECT 1
+    FROM inventory inv
+             INNER JOIN items it      ON it.id = inv.item_id
+             INNER JOIN currencies c  ON c.code = it.price_currency_code
+    WHERE inv.player_id = p.id
+      AND c.is_premium
+)
+ORDER BY p.username;
     
 -- CTEs
 -- 12. Players whose COIN-denominated inventory value is above their own country's average.
