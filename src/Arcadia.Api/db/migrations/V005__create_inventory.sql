@@ -1,8 +1,8 @@
 CREATE TABLE inventory(
-    player_id bigint NOT NULL,
-    item_id bigint NOT NULL,
-    quantity bigint NOT NULL,
-    acquired_at      timestamptz NOT NULL DEFAULT now(),
+    player_id       bigint NOT NULL,
+    item_id         bigint NOT NULL,
+    quantity        bigint NOT NULL,
+    acquired_at     timestamptz NOT NULL DEFAULT now(),
     
     CONSTRAINT inventory_pk PRIMARY KEY (player_id, item_id),
     -- If a player is deleted, it doesn't make sense to keep their inventory, so delete the inventory with it
