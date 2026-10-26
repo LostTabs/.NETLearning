@@ -34,22 +34,22 @@ INSERT INTO player_balances (player_id, currency_code, balance) VALUES ((SELECT 
 INSERT INTO player_balances (player_id, currency_code, balance) VALUES ((SELECT id FROM players WHERE username = 'PLAYER010'), 'GEM', 0);
 
 INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'NO_BALANCE'), (SELECT id FROM items WHERE sku = 'ITEM002'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'NO_BALANCE'), (SELECT id FROM items WHERE sku = 'ITEM003'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'NO_SCORE'), (SELECT id FROM items WHERE sku = 'ITEM001'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'NO_SCORE'), (SELECT id FROM items WHERE sku = 'ITEM003'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'ONLY_COINS'), (SELECT id FROM items WHERE sku = 'ITEM002'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER005'), (SELECT id FROM items WHERE sku = 'ITEM003'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER005'), (SELECT id FROM items WHERE sku = 'ITEM004'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER006'), (SELECT id FROM items WHERE sku = 'ITEM001'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER006'), (SELECT id FROM items WHERE sku = 'ITEM003'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER007'), (SELECT id FROM items WHERE sku = 'ITEM002'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER007'), (SELECT id FROM items WHERE sku = 'ITEM004'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER008'), (SELECT id FROM items WHERE sku = 'ITEM001'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER008'), (SELECT id FROM items WHERE sku = 'ITEM002'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER009'), (SELECT id FROM items WHERE sku = 'ITEM004'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER009'), (SELECT id FROM items WHERE sku = 'ITEM003'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER010'), (SELECT id FROM items WHERE sku = 'ITEM001'), 10);
-INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER010'), (SELECT id FROM items WHERE sku = 'ITEM004'), 10);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'NO_BALANCE'), (SELECT id FROM items WHERE sku = 'ITEM003'), 12);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'NO_SCORE'), (SELECT id FROM items WHERE sku = 'ITEM001'), 24);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'NO_SCORE'), (SELECT id FROM items WHERE sku = 'ITEM003'), 34);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'ONLY_COINS'), (SELECT id FROM items WHERE sku = 'ITEM002'), 16);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER005'), (SELECT id FROM items WHERE sku = 'ITEM003'), 18);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER005'), (SELECT id FROM items WHERE sku = 'ITEM004'), 20);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER006'), (SELECT id FROM items WHERE sku = 'ITEM001'), 95);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER006'), (SELECT id FROM items WHERE sku = 'ITEM003'), 87);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER007'), (SELECT id FROM items WHERE sku = 'ITEM002'), 62);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER007'), (SELECT id FROM items WHERE sku = 'ITEM004'), 34);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER008'), (SELECT id FROM items WHERE sku = 'ITEM001'), 35);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER008'), (SELECT id FROM items WHERE sku = 'ITEM002'), 90);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER009'), (SELECT id FROM items WHERE sku = 'ITEM004'), 18);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER009'), (SELECT id FROM items WHERE sku = 'ITEM003'), 17);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER010'), (SELECT id FROM items WHERE sku = 'ITEM001'), 50);
+INSERT INTO inventory (player_id, item_id, quantity) VALUES ((SELECT id FROM players WHERE username = 'PLAYER010'), (SELECT id FROM items WHERE sku = 'ITEM004'), 63);
 
 INSERT INTO leaderboard (player_id, score) VALUES ((SELECT id FROM players WHERE username = 'NO_INVENTORY'), 100);
 INSERT INTO leaderboard (player_id, score) VALUES ((SELECT id FROM players WHERE username = 'NO_BALANCE'), 80);
