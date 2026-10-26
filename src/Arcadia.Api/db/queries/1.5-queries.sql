@@ -15,7 +15,7 @@ ORDER BY p.username, it.display_name;
 SELECT p.username, COUNT(inv.quantity) AS item_count
 FROM players p LEFT JOIN inventory inv ON p.id = inv.player_id
 GROUP BY p.id
-ORDER BY p.username;
+ORDER BY p.id;
 
 -- 3. Players who own no items. Write it twice: once with LEFT JOIN + IS NULL and once with NOT EXISTS.
 -- Every player that has no items
@@ -60,6 +60,12 @@ WHERE p.id NOT IN (SELECT inv.player_id
 ORDER BY p.username;
 
 -- 4. Items that no player owns.
+-- Shows item with display_name "NO_ONE_HAS", as its an item that no player has in their inventory
+SELECT i.sku, i.display_name
+FROM items i
+WHERE NOT EXISTS (SELECT 1 FROM inventory inv WHERE inv.item_id = i.id)
+ORDER BY i.sku;
+    
 -- 5. Every player's COIN balance, showing 0 for players with no COIN row. Write the broken version first, then the fixed o
 
 --GROUP BY/HAVING
