@@ -66,7 +66,19 @@ FROM items i
 WHERE NOT EXISTS (SELECT 1 FROM inventory inv WHERE inv.item_id = i.id)
 ORDER BY i.sku;
     
--- 5. Every player's COIN balance, showing 0 for players with no COIN row. Write the broken version first, then the fixed o
+-- 5. Every player's COIN balance, showing 0 for players with no COIN row. Write the broken version first, then the fixed one.
+-- V1: broken because the LEFT JOIN adds balances to every player. The ON and WHERE do not filter anything, so it
+-- shows a list of every players.
+SELECT p.username
+FROM players p LEFT JOIN player_balances b ON p.id = b.player_id
+WHERE b.currency_code = 'COIN';
+
+-- V2: FIXED. Now we get the balance of all players and 0 for players with no entry for 'COIN' in player_balances
+SELECT p.username, COALESCE(b.balance, 0) AS coin_balance
+FROM players p LEFT JOIN player_balances b ON b.player_id = p.id 
+                                                    AND b.currency_code = 'COIN'
+ORDER BY p.username;
+
 
 --GROUP BY/HAVING
 -- 6. The number of players per country, largest first.
