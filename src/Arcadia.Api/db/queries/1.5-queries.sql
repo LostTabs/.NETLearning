@@ -67,8 +67,7 @@ WHERE NOT EXISTS (SELECT 1 FROM inventory inv WHERE inv.item_id = i.id)
 ORDER BY i.sku;
     
 -- 5. Every player's COIN balance, showing 0 for players with no COIN row. Write the broken version first, then the fixed one.
--- V1: broken because the LEFT JOIN adds balances to every player. The ON and WHERE do not filter anything, so it
--- shows a list of every players.
+-- V1: broken because the LEFT JOIN adds balances to every player. The ON and WHERE filter all the "null" values
 SELECT p.username
 FROM players p LEFT JOIN player_balances b ON p.id = b.player_id
 WHERE b.currency_code = 'COIN';
@@ -88,7 +87,6 @@ SELECT p.country, COUNT(*) as player_count
 FROM players p
 GROUP BY p.country
 ORDER BY player_count DESC, p.country;
-    
 
 -- 7. Countries with more than 50 players.
 -- Expected Result: PT US
