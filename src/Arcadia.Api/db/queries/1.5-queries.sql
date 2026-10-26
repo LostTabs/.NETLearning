@@ -82,14 +82,14 @@ ORDER BY p.username;
 --GROUP BY/HAVING
 -- 6. The number of players per country, largest first.
 -- Expected result:  50 bots per country (g % 4) + hand-written players
--- PT-53; US-52; GB-50; IE-50; UK-3; GR-2
+-- GB-53; PT-53; US-52; IE-50; GR-2
 SELECT p.country, COUNT(*) as player_count
 FROM players p
 GROUP BY p.country
 ORDER BY player_count DESC, p.country;
 
 -- 7. Countries with more than 50 players.
--- Expected Result: PT US
+-- Expected Result: GB PT US
 SELECT p.country, COUNT(*) AS player_count
 FROM players p
 GROUP BY p.country
@@ -116,7 +116,7 @@ ORDER BY owners_count DESC, it.id;
 
 -- SUBQUERIES
 -- 10. Players whose GEM balance is above the average GEM balance.
--- EXPECTED RESULT: Players with a gem balance above 4753.5. The average is counted as >= 0.
+-- EXPECTED RESULT: Players with a gem balance above 4721.1632653061224490. The average is counted as >= 0.
 -- Only bots are above average. bot_1 8422, bot_10 7090,...
 SELECT p.username, b.balance AS gem_balance 
 FROM players p INNER JOIN player_balances b ON b.player_id = p.id
@@ -161,11 +161,11 @@ FROM player_coin_value pcv
         INNER JOIN players p ON p.id = pcv.player_id
         INNER JOIN country_avg ca ON ca.country = p.country
 WHERE pcv.coin_value > ca.avg_value
-ORDER BY p.country, pcv.coin_value, p.username DESC;
+ORDER BY p.country, pcv.coin_value DESC, p.username;
     
 -- WINDOW FUNCTIONS
 -- 13. The global leaderboard with ROW_NUMBER, RANK and DENSE_RANK side by side. Find your tied players in the output.
--- PLAYER005 and PLAYER006 will be tied. They will have the same rank and dense rank, but different row numbers. 
+-- PLAYER005 and ONLY_COINS will be tied. They will have the same rank and dense rank, but different row numbers. 
 SELECT player_id, score,
        ROW_NUMBER() OVER w AS row_num,
        RANK()       OVER w AS rank,
@@ -175,7 +175,7 @@ WINDOW w AS (ORDER BY score DESC)
 ORDER BY score DESC, player_id;
     
 -- 14. Each player's rank within their country.
--- Tied pair <names> share a rank in <country>; the next player skips a number.
+-- Tied pair PLAYER005 and ONLY_COINS share a rank in GB; the next player skips a number.
 -- NO_SCORE doesn't appear (no leaderboard row = not ranked).
 SELECT p.username, p.country, l.score,
        RANK() OVER w AS country_rank

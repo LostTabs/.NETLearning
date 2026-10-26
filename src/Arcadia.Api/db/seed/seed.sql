@@ -7,9 +7,9 @@ INSERT INTO items(sku, display_name, price_amount, price_currency_code, stackabl
 INSERT INTO players (username, email, country) VALUES ('NO_INVENTORY', 'NO_INVENTORY@mail.com', 'PT');
 INSERT INTO players (username, email, country) VALUES ('NO_BALANCE', 'NO_BALANCE@mail.com', 'PT');
 INSERT INTO players (username, email, country) VALUES ('NO_SCORE', 'NO_SCORE@mail.com', 'PT');
-INSERT INTO players (username, email, country) VALUES ('ONLY_COINS', 'ONLY_COINS@mail.com', 'UK');
-INSERT INTO players (username, email, country) VALUES ('PLAYER005', 'Player005@mail.com', 'UK');
-INSERT INTO players (username, email, country) VALUES ('PLAYER006', 'Player006@mail.com', 'UK');
+INSERT INTO players (username, email, country) VALUES ('ONLY_COINS', 'ONLY_COINS@mail.com', 'GB');
+INSERT INTO players (username, email, country) VALUES ('PLAYER005', 'Player005@mail.com', 'GB');
+INSERT INTO players (username, email, country) VALUES ('PLAYER006', 'Player006@mail.com', 'GB');
 INSERT INTO players (username, email, country) VALUES ('PLAYER007', 'Player007@mail.com', 'US');
 INSERT INTO players (username, email, country) VALUES ('PLAYER008', 'Player008@mail.com', 'US');
 INSERT INTO players (username, email, country) VALUES ('PLAYER009', 'Player009@mail.com', 'GR');
