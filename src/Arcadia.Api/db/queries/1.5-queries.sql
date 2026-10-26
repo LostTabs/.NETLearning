@@ -18,8 +18,47 @@ GROUP BY p.id
 ORDER BY p.username;
 
 -- 3. Players who own no items. Write it twice: once with LEFT JOIN + IS NULL and once with NOT EXISTS.
-
+-- Every player that has no items
+-- V1
+SELECT p.username
+FROM players p LEFT JOIN inventory inv ON p.id = inv.player_id
+WHERE inv.item_id IS NULL
+ORDER BY p.username;
     
+-- V2
+SELECT p.username
+FROM players p
+WHERE NOT EXISTS (
+    SELECT 1 
+    FROM inventory inv
+    WHERE inv.player_id = p.id)
+ORDER BY p.username;
+    
+-- PROVE THEY ARE EQUAL (should run in both directions to make sure
+(SELECT p.username
+ FROM players p LEFT JOIN inventory inv on p.id = inv.player_id
+ WHERE inv.item_id IS NULL
+ ORDER BY p.username) 
+EXCEPT
+(SELECT p.username
+ FROM players p
+ WHERE NOT EXISTS (
+     SELECT 1
+     FROM inventory inv
+     WHERE inv.player_id = p.id)
+ ORDER BY p.username);
+
+-- Breaking it
+-- The internal query returns all players with some inventory + 1 line with NULL player_id for the item
+-- That no one owns. The NOT IN then compares the player id of the players without inventory with all the ids 
+-- of players with an inventory + null. id <> null returns unknown, and the WHERE discards it.
+SELECT p.username
+FROM players p 
+WHERE p.id NOT IN (SELECT inv.player_id
+                   FROM items i
+                            LEFT JOIN inventory inv on inv.item_id = i.id)
+ORDER BY p.username;
+
 -- 4. Items that no player owns.
 -- 5. Every player's COIN balance, showing 0 for players with no COIN row. Write the broken version first, then the fixed o
 
