@@ -108,9 +108,18 @@ ORDER BY inv.player_id, i.price_currency_code;
     
     
 -- 9. Items owned by at least 3 distinct players, with the owner count.
+-- Expected result: 4 (158), 1 (146), 2 (142), 3 (135) - So every item except 5 since it has no owner.
+SELECT it.id, it.sku, COUNT(*) AS owners_count
+FROM inventory inv
+JOIN items it ON it.id = inv.item_id
+GROUP BY it.id
+HAVING COUNT(*) >= 3
+ORDER BY owners_count DESC, it.id;
 
 -- SUBQUERIES
 -- 10. Players whose GEM balance is above the average GEM balance.
+
+    
 -- 11. Players who own at least one item priced in a premium currency. Use currencies.is_premium, not a hard-coded 'GEM'.
 
 -- CTEs
