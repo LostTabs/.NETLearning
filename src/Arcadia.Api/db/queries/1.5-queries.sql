@@ -91,7 +91,12 @@ ORDER BY player_count DESC, p.country;
     
 
 -- 7. Countries with more than 50 players.
-
+-- Expected Result: PT US
+SELECT p.country, COUNT(*) as player_count
+FROM players p
+GROUP BY p.country
+HAVING COUNT(*) > 50
+ORDER BY player_count DESC, p.country;
     
     
 -- 8. Each player's total inventory value per currency (quantity × price, grouped by player and currency).
