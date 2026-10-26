@@ -82,7 +82,18 @@ ORDER BY p.username;
 
 --GROUP BY/HAVING
 -- 6. The number of players per country, largest first.
+-- Expected result:  50 bots per country (g % 4) + hand-written players
+-- PT-53; US-52; GB-50; IE-50; UK-3; GR-2
+SELECT p.country, COUNT(*) as player_count
+FROM players p
+GROUP BY p.country
+ORDER BY player_count DESC, p.country;
+    
+
 -- 7. Countries with more than 50 players.
+
+    
+    
 -- 8. Each player's total inventory value per currency (quantity × price, grouped by player and currency).
 -- 9. Items owned by at least 3 distinct players, with the owner count.
 
