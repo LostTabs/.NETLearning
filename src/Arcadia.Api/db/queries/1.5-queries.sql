@@ -118,10 +118,22 @@ ORDER BY owners_count DESC, it.id;
 
 -- SUBQUERIES
 -- 10. Players whose GEM balance is above the average GEM balance.
-
+-- EXPECTED RESULT: Players with a gem balance above 4753.5. The average is counted as >= 0.
+-- Only bots are above average. bot_1 8422, bot_10 7090,...
+SELECT p.username, b.balance AS gem_balance 
+FROM players p INNER JOIN player_balances b ON b.player_id = p.id
+                                            AND b.currency_code = 'GEM'
+WHERE b.balance > (
+    SELECT AVG(balance)
+    FROM player_balances as pb
+    WHERE pb.balance >= 0 AND pb.currency_code = 'GEM'                                      
+    )
+ORDER BY p.username;
     
 -- 11. Players who own at least one item priced in a premium currency. Use currencies.is_premium, not a hard-coded 'GEM'.
 
+    
+    
 -- CTEs
 -- 12. Players whose COIN-denominated inventory value is above their own country's average.
 
