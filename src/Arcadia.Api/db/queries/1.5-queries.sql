@@ -147,7 +147,24 @@ ORDER BY p.username;
     
 -- CTEs
 -- 12. Players whose COIN-denominated inventory value is above their own country's average.
-
+-- any user with coin items should be accounted into the average. Users without inventory do not affect the avg.
+WITH player_coin_value AS (
+    SELECT inv.player_id, SUM(inv.quantity * it.price_amount) AS coin_value
+    FROM inventory inv
+             INNER JOIN items it ON it.id = inv.item_id
+    WHERE it.price_currency_code = 'COIN'
+    GROUP BY inv.player_id
+), country_avg as (SELECT p.country, AVG(pcv.coin_value) AS avg_value
+                   FROM player_coin_value pcv
+                            INNER JOIN players p ON p.id = pcv.player_id
+                   GROUP BY p.country)
+SELECT p.username, p.country, pcv.coin_value, ca.avg_value
+FROM player_coin_value pcv
+        INNER JOIN players p ON p.id = pcv.player_id
+        INNER JOIN country_avg ca ON ca.country = p.country
+WHERE pcv.coin_value > ca.avg_value
+ORDER BY p.country, pcv.coin_value, p.username DESC;
+    
 -- WINDOW FUNCTIONS
 -- 13. The global leaderboard with ROW_NUMBER, RANK and DENSE_RANK side by side. Find your tied players in the output.
 -- 14. Each player's rank within their country.
