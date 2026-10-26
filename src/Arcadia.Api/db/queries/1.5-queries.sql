@@ -92,7 +92,7 @@ ORDER BY player_count DESC, p.country;
 
 -- 7. Countries with more than 50 players.
 -- Expected Result: PT US
-SELECT p.country, COUNT(*) as player_count
+SELECT p.country, COUNT(*) AS player_count
 FROM players p
 GROUP BY p.country
 HAVING COUNT(*) > 50
@@ -100,6 +100,13 @@ ORDER BY player_count DESC, p.country;
     
     
 -- 8. Each player's total inventory value per currency (quantity × price, grouped by player and currency).
+-- Player with no inventory do not appear in this result as their inventory is empty so they have nothing to report
+SELECT inv.player_id, i.price_currency_code, SUM(inv.quantity * i.price_amount) as amount
+FROM inventory inv INNER JOIN items i ON inv.item_id = i.id
+GROUP BY inv.player_id, i.price_currency_code
+ORDER BY inv.player_id, i.price_currency_code;
+    
+    
 -- 9. Items owned by at least 3 distinct players, with the owner count.
 
 -- SUBQUERIES
