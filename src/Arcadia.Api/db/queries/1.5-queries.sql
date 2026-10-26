@@ -9,7 +9,13 @@ FROM inventory inv INNER JOIN players p ON inv.player_id = p.id
 ORDER BY p.username, it.display_name;
 
 -- 2. Every player and the number of distinct items they own, including players with 0.
-
+-- Every player appears; NO_INVENTORY and any bots without inventory show 0;
+-- No need to use unique because inventory key is (player.id, item.id) so there can't be 2 rows
+-- for the same item owned by the same player.
+SELECT p.username, COUNT(inv.quantity) AS item_count
+FROM players p LEFT JOIN inventory inv ON p.id = inv.player_id
+GROUP BY p.id
+ORDER BY p.username;
 
 -- 3. Players who own no items. Write it twice: once with LEFT JOIN + IS NULL and once with NOT EXISTS.
 
