@@ -167,5 +167,40 @@ ORDER BY p.country, pcv.coin_value, p.username DESC;
     
 -- WINDOW FUNCTIONS
 -- 13. The global leaderboard with ROW_NUMBER, RANK and DENSE_RANK side by side. Find your tied players in the output.
+-- PLAYER005 and PLAYER006 will be tied. They will have the same rank and dense rank, but different row numbers. 
+SELECT player_id, score,
+       ROW_NUMBER() OVER w AS row_num,
+       RANK()       OVER w AS rank,
+       DENSE_RANK() OVER w AS dense_rank
+FROM leaderboard
+WINDOW w AS (ORDER BY score DESC)
+ORDER BY score DESC, player_id;
+    
 -- 14. Each player's rank within their country.
--- 15. "Players around me": given a player id, return that player plus the 5 above and 5 below by global rank, and include a column showing
+-- Tied pair <names> share a rank in <country>; the next player skips a number.
+-- NO_SCORE doesn't appear (no leaderboard row = not ranked).
+SELECT p.username, p.country, l.score,
+       RANK() OVER w AS country_rank
+FROM leaderboard l
+         INNER JOIN players p ON p.id = l.player_id
+WINDOW w AS (PARTITION BY p.country ORDER BY l.score DESC)
+ORDER BY p.country, country_rank, p.username;
+       
+    
+-- 15. "Players around me": given a player id, return that player plus the 5 above and 5 below by global rank, and 
+-- include a column showing how many points each player is behind the player directly above them (use LAG).
+WITH ranked AS (
+    SELECT l.player_id, l.score,
+           ROW_NUMBER() OVER w AS position,
+           RANK()       OVER w AS rnk,
+           LAG(l.score) OVER w - l.score AS points_behind
+    FROM leaderboard l
+    WINDOW w AS (ORDER BY l.score DESC, l.player_id)
+),
+me AS (
+    SELECT position FROM ranked WHERE player_id = 1
+)
+SELECT r.player_id, r.score, r.points_behind, r.position, r.rnk
+FROM ranked r CROSS JOIN me
+WHERE r.position BETWEEN me.position - 5 AND me.position + 5 
+ORDER BY r.position;
