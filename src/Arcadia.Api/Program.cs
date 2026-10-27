@@ -5,6 +5,7 @@ using Arcadia.Api.Infrastructure;
 using Arcadia.Api.Leaderboards;
 using Arcadia.Api.Options;
 using Arcadia.Api.Players;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseDefaultServiceProvider(options =>
@@ -20,6 +21,12 @@ builder.Services.AddOptions<LeaderboardOptions>()
     .Validate(o => o.DefaultLimit <= o.MaxLimit, "DefaultLimit must not exceed MaxLimit")
     .ValidateOnStart();
 
+var connectionString = builder.Configuration.GetConnectionString("Arcadia");
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException("Could not resolve Arcadia connection string");
+}
+builder.Services.AddSingleton(sp => NpgsqlDataSource.Create(connectionString));
 builder.Services.AddTransient<TransientProbe>();
 builder.Services.AddScoped<ScopedProbe>();
 builder.Services.AddScoped<RequestContext>();

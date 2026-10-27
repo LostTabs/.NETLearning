@@ -1,6 +1,8 @@
 using Arcadia.Api.Diagnostics;
 using Arcadia.Api.Infrastructure;
 using Arcadia.Api.Leaderboards;
+using Dapper;
+using Npgsql;
 
 namespace Arcadia.Api.Endpoints;
 
@@ -11,7 +13,14 @@ public static class DiagnosticsEndpoints
         app.MapGet("/di/lifetimes", LifeTimes);
         app.MapGet("/debug/correlation", Correlation);
         app.MapGet("/leaderboard/whoami", GetWhoAmI);
+        app.MapGet("/debug/db", TestConnectionString);
         return app;
+    }
+
+    private static async Task<string?> TestConnectionString(NpgsqlDataSource dataSource, CancellationToken token)
+    {
+        await using var conn = await dataSource.OpenConnectionAsync(token);
+        return await conn.ExecuteScalarAsync<string>("SELECT version()");
     }
 
 
@@ -44,4 +53,6 @@ public static class DiagnosticsEndpoints
             correlationId = rc.CorrelationId
         });
     }
+    
+    
 }
