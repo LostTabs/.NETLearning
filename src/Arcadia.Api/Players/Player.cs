@@ -1,3 +1,3 @@
 namespace Arcadia.Api.Players;
 
-public record Player(Guid Id, string Username, DateTimeOffset CreatedAt);
+public record Player(long Id, string Username, string Email, string Country, DateTime CreatedAt);

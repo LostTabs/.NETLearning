@@ -8,12 +8,44 @@ POST {{baseUrl}}/players
 Content-Type: application/json
 
 {
-  "username": "Alice",
-  "password": "aSafePassword"
+  "username": "diogo",
+  "email": "diogo@mail.com",
+  "country": "PT"
+}
+
+### Register the same username - expect 409 Conflict
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "username": "diogo",
+  "email": "diogo@mail.com",
+  "country": "PT"
+}
+
+
+### Register the same email - expect 409 Conflict
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "username": "iogo",
+  "email": "diogo@mail.com",
+  "country": "PT"
+}
+
+### Register with invalid country code - expect 500
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "username": "iogo",
+  "email": "dioo@mail.com",
+  "country": "Portugal"
 }
 
 ### Read profile — expect 200
-GET {{baseUrl}}/players/123456/profile
+GET {{baseUrl}}/players/5/profile
 
 ### Read profile, unknown player — expect 404
 GET {{baseUrl}}/players/999/profile
@@ -99,3 +131,13 @@ GET {{baseUrl}}/leaderboards/global/around-me?range=25
 
 ### Get AroundMe Leaderboards with exceding range- Expect 400
 GET {{baseUrl}}/leaderboards/global/around-me?range=51
+
+### Exploit: get all users without knowing any username - expect 200 and no username returned.
+GET {{baseUrl}}/debug/players/search?username=%27%20OR%20username%20LIKE%20%27%25
+
+### Exploit: get the emails of all users without knowing any username - expect 200 and empty collection.
+GET {{baseUrl}}/debug/players/search?username=NULL%27%20UNION%20SELECT%20id%2c%20email%20AS%20PlayerId%20FROM%20players%20WHERE%20username%20LIKE%20%27%25
+
+### Exploit: change the name of one user on a GET endpoint - expect 200 and empty collection. No changes in the DB
+GET {{baseUrl}}/debug/players/search?username=NULL%27%3BUPDATE%20players%20SET%20username%3D%27hacked%27%20WHERE%20username%3D%27PLAYER010
+
