@@ -40,7 +40,7 @@ Content-Type: application/json
 
 {
   "username": "iogo",
-  "email": "diogo@mail.com",
+  "email": "dioo@mail.com",
   "country": "Portugal"
 }
 
@@ -133,11 +133,11 @@ GET {{baseUrl}}/leaderboards/global/around-me?range=25
 GET {{baseUrl}}/leaderboards/global/around-me?range=51
 
 ### Exploit: get all users without knowing any username - expect 200 and no username returned.
-GET {{baseUrl}}/debug/players/search --data-urlencode "username=' OR username LIKE '%'"
+GET {{baseUrl}}/debug/players/search?username=%27%20OR%20username%20LIKE%20%27%25
 
 ### Exploit: get the emails of all users without knowing any username - expect 200 and empty collection.
-GET {{baseUrl}}/debug/players/search --data-urlencode "username=' OR username LIKE '%'; SELECT email as PlayerId FROM players WHERE username LIKE '%'"
+GET {{baseUrl}}/debug/players/search?username=NULL%27%20UNION%20SELECT%20id%2c%20email%20AS%20PlayerId%20FROM%20players%20WHERE%20username%20LIKE%20%27%25
 
 ### Exploit: change the name of one user on a GET endpoint - expect 200 and empty collection. No changes in the DB
-GET {{baseUrl}}/debug/players/search --data-urlencode "username=NULL';UPDATE players SET username='hacked' WHERE username='diogo"
+GET {{baseUrl}}/debug/players/search?username=NULL%27%3BUPDATE%20players%20SET%20username%3D%27hacked%27%20WHERE%20username%3D%27PLAYER010
 
