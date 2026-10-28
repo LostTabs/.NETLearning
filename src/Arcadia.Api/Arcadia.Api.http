@@ -8,9 +8,40 @@ POST {{baseUrl}}/players
 Content-Type: application/json
 
 {
-  "username": "Alice",
-  "email": "aSafePassword",
-  "country": "UK"
+  "username": "diogo",
+  "email": "diogo@mail.com",
+  "country": "PT"
+}
+
+### Register the same username - expect 409 Conflict
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "username": "diogo",
+  "email": "diogo@mail.com",
+  "country": "PT"
+}
+
+
+### Register the same email - expect 409 Conflict
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "username": "iogo",
+  "email": "diogo@mail.com",
+  "country": "PT"
+}
+
+### Register with invalid country code - expect 500
+POST {{baseUrl}}/players
+Content-Type: application/json
+
+{
+  "username": "iogo",
+  "email": "diogo@mail.com",
+  "country": "Portugal"
 }
 
 ### Read profile — expect 200
@@ -100,3 +131,13 @@ GET {{baseUrl}}/leaderboards/global/around-me?range=25
 
 ### Get AroundMe Leaderboards with exceding range- Expect 400
 GET {{baseUrl}}/leaderboards/global/around-me?range=51
+
+### Exploit: get all users without knowing any username - expect 200 and no username returned.
+GET {{baseUrl}}/debug/players/search --data-urlencode "username=' OR username LIKE '%'"
+
+### Exploit: get the emails of all users without knowing any username - expect 200 and empty collection.
+curl.exe -G -i http://localhost:5293/debug/players/search --data-urlencode "username=' OR username LIKE '%'; SELECT email as PlayerId FROM players WHERE username LIKE '%'"
+
+### Exploit: change the name of one user on a GET endpoint - expect 200 and empty collection. No changes in the DB
+GET {{baseUrl}}/debug/players/search --data-urlencode "username=NULL';UPDATE players SET username='hacked' WHERE username='diogo"
+
