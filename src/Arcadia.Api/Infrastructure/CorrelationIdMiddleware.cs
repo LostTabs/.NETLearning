@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Primitives;
-
 namespace Arcadia.Api.Infrastructure;
 
 public class CorrelationIdMiddleware
@@ -13,17 +11,20 @@ public class CorrelationIdMiddleware
     public async Task InvokeAsync(HttpContext context, RequestContext requestContext)
     {
         var correlationId = context.Request.Headers[Header].ToString();
+
         if (string.IsNullOrWhiteSpace(correlationId))
         {
             correlationId = Guid.NewGuid().ToString();
         }
-        
+
         requestContext.CorrelationId = correlationId;
-        
-        context.Response.Headers[Header] = correlationId;   
-        
+
+        context.Response.OnStarting(() =>
+        {
+            context.Response.Headers[Header] = correlationId;
+            return Task.CompletedTask;
+        });
+
         await _next(context);
-        
-        
     }
 }

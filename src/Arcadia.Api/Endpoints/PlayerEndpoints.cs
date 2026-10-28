@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Arcadia.Api.Contracts;
 using Arcadia.Api.Players;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -10,28 +11,18 @@ public static class PlayerEndpoints
     {
         var players = app.MapGroup("/players");
         
+        players.MapPost("/", RegisterPlayer);
+        
         var player = players.MapGroup("/{playerId:long}");
-        player.MapGet("/profile", GetProfile);
+        player.MapGet("/profile", GetPlayer);
         player.MapPatch("/profile", UpdateProfile);
         player.MapGet("/currencies", GetCurrencies);
         player.MapGet("/inventory", GetInventory);
-
+        
         player.MapPost("/purchases", BuyItem);
         player.MapGet("/purchases", GetPurchaseHistory);
         
-        players.MapGet("/{id:guid}", GetPlayer);
-        players.MapPost("/", RegisterPlayer);
-        
         return app;
-    }
-    
-    private static Results<Ok<ProfileResponse>, NotFound> GetProfile(long playerId)
-    {
-        // Hard-coded stub: pretend player 999 doesn't exist, so you can test the 404
-        if (playerId == 999)
-            return TypedResults.NotFound();
-
-        return TypedResults.Ok(new ProfileResponse(playerId, "Alice"));
     }
     
     private static Results<Ok<ProfileResponse>, NotFound, Conflict> UpdateProfile(long playerId, UpdateProfileRequest request)
@@ -113,20 +104,29 @@ public static class PlayerEndpoints
         
     }
     
-    private static async Task<Results<Ok<Player>, NotFound>>  GetPlayer(Guid id, IPlayerRepository repo, CancellationToken ct)
+    private static async Task<Results<Ok<ProfileResponse>, NotFound>>  GetPlayer(long playerId, IPlayerRepository repo, CancellationToken ct)
     {
-        var player = await repo.GetAsync(id, ct);
-        return player is null ? TypedResults.NotFound() : TypedResults.Ok(player);
+        var player = await repo.GetAsync(playerId, ct);
+        return player is null ? TypedResults.NotFound() : TypedResults.Ok(new ProfileResponse(player.Id, player.Username));
     }
 
-    private static async Task<Results<Created<Player>, BadRequest<string>, Conflict<string>>>  RegisterPlayer(CreatePlayerRequest request, IPlayerRepository repo, TimeProvider time,
-        CancellationToken ct)
+    private static async
+        Task<Results<Created<ProfileResponse>, BadRequest<string>, Conflict<string>>>
+        RegisterPlayer(CreatePlayerRequest request,
+            IPlayerRepository repo,
+            CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(request.Username)) return TypedResults.BadRequest("Username is required");
-        var player = new Player(Guid.NewGuid(), request.Username, time.GetUtcNow());
-        var result = await repo.TryAddAsync(player, ct);
-        return !result ? TypedResults.Conflict("Username is already taken") :
-            TypedResults.Created($"/players/{player.Id}", player);
-    }
 
+        var (status, player) = await repo.CreateAsync(request.Username, request.Email, request.Country, ct);
+        
+        return status switch
+        {
+            CreatePlayerStatus.UsernameTaken => TypedResults.Conflict("Username is already taken"),
+            CreatePlayerStatus.EmailTaken => TypedResults.Conflict("Email is already taken"),
+            CreatePlayerStatus.Created => TypedResults.Created($"/players/{player!.Id}/profile", 
+                                            new ProfileResponse(player.Id, player.Username)),
+            _ => throw new UnreachableException()
+        };
+    }
 }

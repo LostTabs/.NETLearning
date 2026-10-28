@@ -9,11 +9,12 @@ Content-Type: application/json
 
 {
   "username": "Alice",
-  "password": "aSafePassword"
+  "email": "aSafePassword",
+  "country": "UK"
 }
 
 ### Read profile — expect 200
-GET {{baseUrl}}/players/123456/profile
+GET {{baseUrl}}/players/5/profile
 
 ### Read profile, unknown player — expect 404
 GET {{baseUrl}}/players/999/profile
